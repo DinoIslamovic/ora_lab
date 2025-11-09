@@ -17,7 +17,7 @@ Zaštićeno licencijom Creative Commons 4.0
 Dino Islamović
 
 ## Verzija podataka
-1.0
+1.5
 
 ## Jezik
 Engleski
@@ -33,10 +33,10 @@ Stopa rasta
 Broj smrti u milijunima
 ### birthsMln
 Broj porođaja u milijunima
-### mostPopulousContinent
-Kontinent sa najviše stanovnika
+### mostPopulousCountry
+Država sa najviše stanovnika
 ### fastestGrowingCountries
-Tri države sa najvećom stopom rasta
+Tri države sa najvećom stopom rasta, njihova imena i stope rasta
 ### slowestGrowingCountry
 Država kojoj najsporije raste broj stanovnika/najbrže pada broj stanovnika
 ### nextYearPredictionMln
