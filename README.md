@@ -1,5 +1,5 @@
-# ora_lab1
-Repozitorij prve laboratorijske vježbe kolegija Otvoreno Računarstvo
+# ora_lab
+Repozitorij za laboratorijske vježbe kolegija Otvoreno Računarstvo
 
 ## Licencija
 [![CC BY 4.0][cc-by-shield]][cc-by]
