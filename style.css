@@ -1,0 +1,7 @@
+
+body {background-color: lightgrey;}
+h1 {color: purple}
+p {}
+table, th, td {
+	border:1px solid black;
+}

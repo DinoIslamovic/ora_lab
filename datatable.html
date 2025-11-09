@@ -1,0 +1,46 @@
+<html>
+	<head>
+		<title>Prikaz i filtriranje podataka</title>
+		<link rel="stylesheet" href='style.css'>
+		<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+		<meta charset="UTF-8">
+		<meta name="author", content="Dino Islamović">
+		<meta name="description", content="Podaci vezani uz broj stanovnika na Zemlji po godinama.">
+		<meta name="title", content="Moji podaci">
+	</head>
+	
+	<body>
+		<p>Filtriranje</p>
+		<form>
+			<input type="text" id="formId">
+		</form>
+		<p>
+			<select>
+				<option value="wildcard" selected>Sva polja(wildcard)</option>
+				<!--<option value="whatYear">Godina</option>
+				<option value="nameOfCountry">Ime države</option> -->
+			</select>
+		</p>
+		<button onclick=test()>Filtriraj</button>
+		<p/>
+		<table id="table" border=1>
+			<tr>
+				<th>whatYear</th>
+				<th>growthRate</th>
+				<th>deathsMln</th>
+				<th>birthsMln</th>
+				<th>mostPopulousCountry</th>
+				<th>slowestGrowingCountry</th>
+				<th>nextYearPredictionMln</th>
+				<th>numberOfCountries</th>
+				<th>numberOfPeopleMln</th>
+				<th>fastestGrowingCountries</th>
+			</tr>
+			<tbody id="temp_table"></tbody>
+			<script>
+				
+			</script>
+		</table>
+		<script type="text/javascript" src="frontend.js"></script>
+	</body>
+</html>

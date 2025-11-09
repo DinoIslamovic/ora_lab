@@ -1,0 +1,95 @@
+{
+  "$id": "fixedYearlyPopulation.json"
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "fixedYearlyPopulation",
+  "description": "Skup podataka vezanih uz broj stanovnika na Zemlji od 2015. do 2024. godine za otvoreno računarstvo",
+  "type": "array",
+  "items": {
+    "type": "object",
+	"title": "censusYears",
+	"description": "Object which contains all the various population data for each calendar year",
+    "properties": {
+      "whatYear": {
+        "type": "number",
+		"title": "whatYear",
+		"description": "Calendar year being looked at."
+      },
+      "growthRate": {
+        "type": "number",
+		"title": "growthRate",
+		"description": "Growth rate of the world in that calendar year."
+      },
+      "deathsMln": {
+        "type": "number",
+		"title": "deathsMln",
+		"description": "Number of deaths in that calendar year, expressed in millions."
+      },
+      "birthsMln": {
+        "type": "number",
+		"title": "birthsMln",
+		"description": "Number of births in that calendar year, expressed in millions."
+      },
+      "mostPopulousCountry": {
+        "type": "string",
+		"title": "mostPopulousCountry",
+		"description": "Most populous country in that calendar year."
+      },
+      "slowestGrowingCountry": {
+        "type": "string",
+		"title": "slowestGrowingCountry",
+		"description": "Country with the slowest growth rate in that calendar year."
+      },
+      "nextYearPredictionMln": {
+        "type": "number",
+		"title": "nextYearPredictionMln",
+		"description": "UN prediction of the number of people in the following year, expressed in millions."
+      },
+      "numberOfCountries": {
+        "type": "number",
+		"title": "numberOfCountries",
+		"description": "Number of UN member states in that calendar year."
+      },
+      "numberOfPeopleMln": {
+        "type": "number",
+		"title": "numberOfPeopleMln",
+		"description": "Number of people on Earth in that calendar year, expressed in millions."
+      },
+      "fastestGrowingCountries": {
+        "type": "array",
+		"title": "fastestGrowingCountries",
+		"description": "Names and grothw rates of three countries with the fastest population growth rate in that calendar year.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "nameOfCountry": {
+              "type": "string"
+			  "title": "nameOfCountry",
+			  "description": "Name of the country"
+            },
+            "growthRate": {
+              "type": "number"
+			  "title": "growthRate",
+			  "description": "Growth rate of the population of that country."
+            }
+          },
+          "required": [
+            "nameOfCountry",
+            "growthRate"
+          ]
+        }
+      }
+    },
+    "required": [
+      "whatYear",
+      "growthRate",
+      "deathsMln",
+      "birthsMln",
+      "mostPopulousCountry",
+      "slowestGrowingCountry",
+      "nextYearPredictionMln",
+      "numberOfCountries",
+      "numberOfPeopleMln",
+      "fastestGrowingCountries"
+    ]
+  }
+}
