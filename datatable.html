@@ -17,11 +17,18 @@
 		<p>
 			<select>
 				<option value="wildcard" selected>Sva polja(wildcard)</option>
-				<!--<option value="whatYear">Godina</option>
-				<option value="nameOfCountry">Ime države</option> -->
+				<option value="whatYear">Godina</option>
+				<option value="nameOfCountry">Ime države</option>
+				<option value="birthsMln">Broj rođenja</option>
+				<option value="mostPopulousCountry">mostPopulousCountry</option>
+				<option value="slowestGrowingCountry">slowestGrowingCountry</option>
+				<option value="nextYearPredictionMln">nextYearPredictionMln</option>
+				<option value="numberOfCountries">numberOfCountries</option>
+				<option value="numberOfPeopleMln">numberOfPeopleMln</option>
+				<option value="fastestGrowingCountries">fastestGrowingCountries</option>
 			</select>
 		</p>
-		<button onclick=test()>Filtriraj</button>
+		<button id="filterButton">Filtriraj</button>
 		<p/>
 		<table id="table" border=1>
 			<tr>
@@ -34,12 +41,18 @@
 				<th>nextYearPredictionMln</th>
 				<th>numberOfCountries</th>
 				<th>numberOfPeopleMln</th>
-				<th>fastestGrowingCountries</th>
+				<th style="width:300px">
+					fastestGrowingCountries
+					<table>
+						<tr>
+							<th style="width:200px">nameOfCountry</th>
+							<th style="width:100px">growthRate</th>
+						</tr>
+					</table>
+				</th>
 			</tr>
 			<tbody id="temp_table"></tbody>
-			<script>
-				
-			</script>
+			
 		</table>
 		<script type="text/javascript" src="frontend.js"></script>
 	</body>
