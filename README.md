@@ -17,7 +17,7 @@ Zaštićeno licencijom Creative Commons 4.0
 Dino Islamović
 
 ## Verzija podataka
-1.5
+2.0
 
 ## Jezik
 Engleski
