@@ -1,3 +1,14 @@
+//const pg = require('pg');
+//const R = require('ramda');
+
+//const cs = 'postgresql://postgres:bazepodataka@localhost:5432/fixedYearlyPopulation';
+
+//const client = new pg.Client(cs);
+
+//client.connect();
+
+//const fs = require('fs');
+
 var table = document.getElementById("temp_table");
 var btn = document.getElementById("filterButton");
 
@@ -54,3 +65,18 @@ function writeData(data) {
 	//}
 	table.insertAdjacentHTML('afterbegin', inputString);
 }
+
+/*
+client.query('SELECT * FROM censusyear').then(res => {
+
+    const data = res.rows;
+
+    console.log('all data');
+    data.forEach(row => {
+        console.log(`whatYear: ${row.whatyear}`);
+    })
+
+
+}).finally(() => {
+    client.end()
+});*/
