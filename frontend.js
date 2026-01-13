@@ -9,6 +9,8 @@
 
 //const fs = require('fs');
 
+//pg_ctl -D "C:/Program Files/PostgreSQL/17/data" stop
+
 var table = document.getElementById("temp_table");
 var btn = document.getElementById("filterButton");
 
