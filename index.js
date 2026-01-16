@@ -102,12 +102,14 @@ app.get('/buttonPress', (request, response) => {
 	//console.log(formvalue + " " + dropdown);
 	//console.log(request.body);
 	//var formvalue = '7';//request.body.formvalue;
+	if(formvalue=="") formvalue ='0';
+	formvalue = '\''+formvalue+'\'';
 	//var dropdown = "growthRate";//request.body.dropdown;
-	var whatYear = "FALSE", growthRate = "FALSE", deathsMln = "FALSE", birthsMln = "FALSE", mostPopulousCountry = "FALSE";
+	var wildcard = "FALSE", whatYear = "FALSE", growthRate = "FALSE", deathsMln = "FALSE", birthsMln = "FALSE", mostPopulousCountry = "FALSE";
 	var slowestGrowingCountry = "FALSE", nextYearPredictionMln = "FALSE", numberOfCountries = "FALSE", numberOfPeopleMln = "FALSE", fastestGrowingCountries = "FALSE";
 	switch(dropdown) {
 		case "wildcard":
-			console.log("wildcard")
+			//console.log("wildcard")
 			whatYear="TRUE";
 			growthRate="TRUE";
 			deathsMln="TRUE";
@@ -150,7 +152,23 @@ app.get('/buttonPress', (request, response) => {
 			fastestGrowingCountries="TRUE";
 			break;
 	}
-	console.log("ide query!!");
+	console.log('WITH groupedCountries AS (SELECT whatyear, json_agg(json_build_object(\'nameOfCountry\', \
+		nameofcountry,\'growthRate\', growthrate) ORDER BY growthrate DESC) AS countriesArray FROM fastestGrowingCountries GROUP BY whatyear) \
+		SELECT json_agg(json_build_object(\'whatYear\', censusyear.whatyear, \'growthRate\', censusyear.growthRate, \
+		\'deathsMln\', censusyear.deathsMln,\'birthsMln\', censusyear.birthsmln,\'mostPopulousCountry\', censusyear.mostpopulouscountry,\
+		\'slowestGrowingCountry\', censusyear.slowestgrowingcountry,\'nextYearPredictionMln\', censusyear.nextyearpredictionmln,\'numberOfCountries\', \
+		censusyear.numberofcountries,\'numberOfPeopleMln\', censusyear.numberofpeoplemln,\'fastestGrowingCountries\', groupedCountries.countriesArray) \
+		ORDER BY censusyear.whatyear DESC) FROM censusyear JOIN groupedCountries ON censusyear.whatyear = groupedCountries.whatyear \
+		WHERE (cast(censusyear.whatyear AS TEXT) LIKE \'%\' || cast('+formvalue+' AS TEXT) || \'%\' AND '+whatYear+') OR\
+		(cast(censusyear.growthrate AS TEXT) LIKE \'%\' || cast('+formvalue+' AS TEXT) || \'%\' AND '+growthRate+') OR\
+		(cast(censusyear.deathsmln AS TEXT) LIKE \'%\' || cast('+formvalue+' AS TEXT) || \'%\' AND '+deathsMln+') OR\
+		(cast(censusyear.birthsmln AS TEXT) LIKE \'%\' || cast('+formvalue+' AS TEXT) || \'%\' AND '+birthsMln+') OR\
+		(cast(censusyear.mostpopulouscountry AS TEXT) LIKE \'%\' || cast('+formvalue+' AS TEXT) || \'%\' AND '+mostPopulousCountry+') OR\
+		(cast(censusyear.slowestGrowingCountry AS TEXT) LIKE \'%\' || cast('+formvalue+' AS TEXT) || \'%\' AND '+slowestGrowingCountry+') OR\
+		(cast(censusyear.nextYearPredictionMln AS TEXT) LIKE \'%\' || cast('+formvalue+' AS TEXT) || \'%\' AND '+nextYearPredictionMln+') OR\
+		(cast(censusyear.numberOfCountries AS TEXT) LIKE \'%\' || cast('+formvalue+' AS TEXT) || \'%\' AND '+numberOfCountries+') OR\
+		(cast(censusyear.numberOfPeopleMln AS TEXT) LIKE \'%\' || cast('+formvalue+' AS TEXT) || \'%\' AND '+numberOfPeopleMln+') OR\
+		(cast(groupedCountries.whatYear AS TEXT) LIKE \'%\' || cast('+formvalue+' AS TEXT) || \'%\' AND '+fastestGrowingCountries+') OR '+wildcard);
 	//client.query('WITH groupedCountries AS (SELECT whatyear, json_agg(json_build_object(\'nameOfCountry\', nameofcountry,\'growthRate\', growthrate) ORDER BY growthrate DESC) AS countriesArray FROM fastestGrowingCountries GROUP BY whatyear) SELECT json_agg(json_build_object(\'whatYear\', censusyear.whatyear, \'growthRate\', censusyear.growthRate, \'deathsMln\', censusyear.deathsMln,\'birthsMln\', censusyear.birthsmln,\'mostPopulousCountry\', censusyear.mostpopulouscountry,\'slowestGrowingCountry\', censusyear.slowestgrowingcountry,\'nextYearPredictionMln\', censusyear.nextyearpredictionmln,\'numberOfCountries\', censusyear.numberofcountries,\'numberOfPeopleMln\', censusyear.numberofpeoplemln,\'fastestGrowingCountries\', groupedCountries.countriesArray) ORDER BY censusyear.whatyear DESC) FROM censusyear JOIN groupedCountries ON censusyear.whatyear = groupedCountries.whatyear WHERE cast(fixedYearlyPopulation.whatyear AS TEXT) LIKE \'%'+searchString+'%\'').then(res => {
 	client.query('WITH groupedCountries AS (SELECT whatyear, json_agg(json_build_object(\'nameOfCountry\', \
 		nameofcountry,\'growthRate\', growthrate) ORDER BY growthrate DESC) AS countriesArray FROM fastestGrowingCountries GROUP BY whatyear) \
@@ -168,7 +186,7 @@ app.get('/buttonPress', (request, response) => {
 		(cast(censusyear.nextYearPredictionMln AS TEXT) LIKE \'%\' || cast('+formvalue+' AS TEXT) || \'%\' AND '+nextYearPredictionMln+') OR\
 		(cast(censusyear.numberOfCountries AS TEXT) LIKE \'%\' || cast('+formvalue+' AS TEXT) || \'%\' AND '+numberOfCountries+') OR\
 		(cast(censusyear.numberOfPeopleMln AS TEXT) LIKE \'%\' || cast('+formvalue+' AS TEXT) || \'%\' AND '+numberOfPeopleMln+') OR\
-		(cast(groupedCountries.whatYear AS TEXT) LIKE \'%\' || cast('+formvalue+' AS TEXT) || \'%\' AND '+fastestGrowingCountries+')').then(res => {
+		(cast(groupedCountries.whatYear AS TEXT) LIKE \'%\' || cast('+formvalue+' AS TEXT) || \'%\' AND '+fastestGrowingCountries+') OR '+wildcard).then(res => {
 		//console.log(res.rows[0].json_agg);
 		response.send(res.rows[0].json_agg);
 
