@@ -13,8 +13,11 @@
 
 var table = document.getElementById("temp_table");
 var btn = document.getElementById("filterButton");
+var whatToSearch = document.getElementById("formId");
+
 
 btn.addEventListener("click", pressFunc)
+/*
 var httpRequest = new XMLHttpRequest();
 httpRequest.open('GET', 'fixedYearlyPopulation.json');
 httpRequest.onload = function() {
@@ -22,18 +25,37 @@ httpRequest.onload = function() {
 	writeData(jsonData);
 };
 httpRequest.send();
-
+*/
 
 function pressFunc() {
+	var searchMe = whatToSearch.textContent;
 	var httpRequest = new XMLHttpRequest();
-	httpRequest.open('GET', 'fixedYearlyPopulation.json');
+	httpRequest.open('GET', 'buttonPress');
 	httpRequest.onload = function() {
 		var jsonData = filterData(JSON.parse(httpRequest.responseText));
+		console.log(jsonData);
 		writeData(jsonData);
 	};
-	httpRequest.send();
+	httpRequest.send(searchMe); 
+	/*
+	fetch("/buttonPress", {method: 'GET'}).then(function(response) {
+		if(response.ok) {
+			console.log('Click was recorded');
+			//console.log(response.json);
+			//return;
+		}
+		throw new Error('Request failed.');
+	}).then(function(data) {
+		var jsonData = filterData(JSON.parse(data));
+		writeData(jsonData);
+    }).catch(function(error) {
+      console.log(error);
+    });
+	*/
+	//writeData(filterData(response));
 	
 };
+pressFunc();
 
 function filterData(unfilteredData) {
 	var filteredData = unfilteredData;
