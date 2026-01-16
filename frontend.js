@@ -28,15 +28,19 @@ httpRequest.send();
 */
 
 function pressFunc() {
-	var searchMe = whatToSearch.textContent;
+	var formvalue = document.getElementById("formId").value;
+	var dropdown = document.getElementById("selectField").value;
+	//var sendData = '{"formvalue":'+formvalue+',"dropdown":'+dropdown+'}';
 	var httpRequest = new XMLHttpRequest();
 	httpRequest.open('GET', 'buttonPress');
+	//httpRequest.setRequestHeader("Content-Type", "application/json");
 	httpRequest.onload = function() {
+		//console.log("yo0");
 		var jsonData = filterData(JSON.parse(httpRequest.responseText));
-		console.log(jsonData);
+		//console.log(jsonData);
 		writeData(jsonData);
 	};
-	httpRequest.send(searchMe); 
+	httpRequest.send(); 
 	/*
 	fetch("/buttonPress", {method: 'GET'}).then(function(response) {
 		if(response.ok) {
