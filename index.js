@@ -1,5 +1,5 @@
 const pg = require('pg');
-const R = require('ramda');
+//const R = require('ramda');
 const fs = require('fs');
 const express = require('express');
 const { EventEmitter } = require('events');
@@ -10,7 +10,7 @@ const client = new pg.Client(cs);
 client.connect();
 
 const app = express();
-
+app.use(express.json()); 
 //client.connect();
 
 client.query('SELECT * FROM censusyear').then(res => {
@@ -88,14 +88,26 @@ app.get('/fixedYearlyPopulation.json', (request, response) => {
 	})
 })
 
+
+var formvalue, dropdown;
+app.post('/getParams', (request, response) => {
+	console.log(request.body);
+	formvalue = request.body.formvalue;
+	dropdown = request.body.dropdown;
+
+})
+
+
 app.get('/buttonPress', (request, response) => {
+	//console.log(formvalue + " " + dropdown);
 	//console.log(request.body);
-	var formvalue = '7';//request.body.formvalue;
-	var dropdown = "growthRate";//request.body.dropdown;
+	//var formvalue = '7';//request.body.formvalue;
+	//var dropdown = "growthRate";//request.body.dropdown;
 	var whatYear = "FALSE", growthRate = "FALSE", deathsMln = "FALSE", birthsMln = "FALSE", mostPopulousCountry = "FALSE";
 	var slowestGrowingCountry = "FALSE", nextYearPredictionMln = "FALSE", numberOfCountries = "FALSE", numberOfPeopleMln = "FALSE", fastestGrowingCountries = "FALSE";
 	switch(dropdown) {
 		case "wildcard":
+			console.log("wildcard")
 			whatYear="TRUE";
 			growthRate="TRUE";
 			deathsMln="TRUE";
@@ -138,7 +150,7 @@ app.get('/buttonPress', (request, response) => {
 			fastestGrowingCountries="TRUE";
 			break;
 	}
-
+	console.log("ide query!!");
 	//client.query('WITH groupedCountries AS (SELECT whatyear, json_agg(json_build_object(\'nameOfCountry\', nameofcountry,\'growthRate\', growthrate) ORDER BY growthrate DESC) AS countriesArray FROM fastestGrowingCountries GROUP BY whatyear) SELECT json_agg(json_build_object(\'whatYear\', censusyear.whatyear, \'growthRate\', censusyear.growthRate, \'deathsMln\', censusyear.deathsMln,\'birthsMln\', censusyear.birthsmln,\'mostPopulousCountry\', censusyear.mostpopulouscountry,\'slowestGrowingCountry\', censusyear.slowestgrowingcountry,\'nextYearPredictionMln\', censusyear.nextyearpredictionmln,\'numberOfCountries\', censusyear.numberofcountries,\'numberOfPeopleMln\', censusyear.numberofpeoplemln,\'fastestGrowingCountries\', groupedCountries.countriesArray) ORDER BY censusyear.whatyear DESC) FROM censusyear JOIN groupedCountries ON censusyear.whatyear = groupedCountries.whatyear WHERE cast(fixedYearlyPopulation.whatyear AS TEXT) LIKE \'%'+searchString+'%\'').then(res => {
 	client.query('WITH groupedCountries AS (SELECT whatyear, json_agg(json_build_object(\'nameOfCountry\', \
 		nameofcountry,\'growthRate\', growthrate) ORDER BY growthrate DESC) AS countriesArray FROM fastestGrowingCountries GROUP BY whatyear) \
@@ -157,7 +169,7 @@ app.get('/buttonPress', (request, response) => {
 		(cast(censusyear.numberOfCountries AS TEXT) LIKE \'%\' || cast('+formvalue+' AS TEXT) || \'%\' AND '+numberOfCountries+') OR\
 		(cast(censusyear.numberOfPeopleMln AS TEXT) LIKE \'%\' || cast('+formvalue+' AS TEXT) || \'%\' AND '+numberOfPeopleMln+') OR\
 		(cast(groupedCountries.whatYear AS TEXT) LIKE \'%\' || cast('+formvalue+' AS TEXT) || \'%\' AND '+fastestGrowingCountries+')').then(res => {
-		console.log(res.rows[0].json_agg);
+		//console.log(res.rows[0].json_agg);
 		response.send(res.rows[0].json_agg);
 
 

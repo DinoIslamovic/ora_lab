@@ -1,6 +1,8 @@
 //const pg = require('pg');
 //const R = require('ramda');
 
+//const { drop } = require("ramda");
+
 //const cs = 'postgresql://postgres:bazepodataka@localhost:5432/fixedYearlyPopulation';
 
 //const client = new pg.Client(cs);
@@ -30,17 +32,26 @@ httpRequest.send();
 function pressFunc() {
 	var formvalue = document.getElementById("formId").value;
 	var dropdown = document.getElementById("selectField").value;
-	//var sendData = '{"formvalue":'+formvalue+',"dropdown":'+dropdown+'}';
+	var sendData = '{"formvalue":"'+formvalue+'","dropdown":"'+dropdown+'"}';
+	var params = 'formvalue='+formvalue+'&dropdown='+dropdown;
+
+	
+	var postData = new XMLHttpRequest();
+	postData.open('POST', 'getParams', true);
+	postData.setRequestHeader('Content-type', 'application/json');
+	postData.send(sendData)
+	
+
 	var httpRequest = new XMLHttpRequest();
 	httpRequest.open('GET', 'buttonPress');
-	//httpRequest.setRequestHeader("Content-Type", "application/json");
+	httpRequest.setRequestHeader('Content-type', 'application/json');
 	httpRequest.onload = function() {
 		//console.log("yo0");
 		var jsonData = filterData(JSON.parse(httpRequest.responseText));
 		//console.log(jsonData);
 		writeData(jsonData);
 	};
-	httpRequest.send(); 
+	httpRequest.send(sendData); 
 	/*
 	fetch("/buttonPress", {method: 'GET'}).then(function(response) {
 		if(response.ok) {
