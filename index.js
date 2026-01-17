@@ -217,4 +217,139 @@ app.get('/buttonPress', (request, response) => {
 	
 })
 
+
+
+app.get('/api/v1/data/all', (request, response) => {
+	client.query('WITH groupedCountries AS (SELECT whatyear, json_agg(json_build_object(\'nameOfCountry\', \
+		nameofcountry,\'growthRate\', growthrate) ORDER BY growthrate DESC) AS countriesArray FROM fastestGrowingCountries GROUP BY whatyear) \
+		SELECT json_agg(json_build_object(\'whatYear\', censusyear.whatyear, \'growthRate\', censusyear.growthRate, \
+		\'deathsMln\', censusyear.deathsMln,\'birthsMln\', censusyear.birthsmln,\'mostPopulousCountry\', censusyear.mostpopulouscountry,\
+		\'slowestGrowingCountry\', censusyear.slowestgrowingcountry,\'nextYearPredictionMln\', censusyear.nextyearpredictionmln,\'numberOfCountries\', \
+		censusyear.numberofcountries,\'numberOfPeopleMln\', censusyear.numberofpeoplemln,\'fastestGrowingCountries\', groupedCountries.countriesArray) \
+		ORDER BY censusyear.whatyear DESC) FROM censusyear JOIN groupedCountries ON censusyear.whatyear = groupedCountries.whatyear').then(res => {
+		if(res.rows[0].json_agg == null) {
+			response.send("[]");
+		}
+		else {
+			response.send(res.rows[0].json_agg);
+		}
+	})
+});
+
+app.get('/api/v1/data/specific/:id', (request, response) => {
+	//console.log(request.params.id);
+	
+	client.query('WITH groupedCountries AS (SELECT whatyear, json_agg(json_build_object(\'nameOfCountry\', \
+					nameofcountry,\'growthRate\', growthrate) ORDER BY growthrate DESC) AS countriesArray FROM fastestGrowingCountries GROUP BY whatyear) \
+					SELECT json_agg(json_build_object(\'whatYear\', censusyear.whatyear, \'growthRate\', censusyear.growthRate, \
+					\'deathsMln\', censusyear.deathsMln,\'birthsMln\', censusyear.birthsmln,\'mostPopulousCountry\', censusyear.mostpopulouscountry,\
+					\'slowestGrowingCountry\', censusyear.slowestgrowingcountry,\'nextYearPredictionMln\', censusyear.nextyearpredictionmln,\'numberOfCountries\', \
+					censusyear.numberofcountries,\'numberOfPeopleMln\', censusyear.numberofpeoplemln,\'fastestGrowingCountries\', groupedCountries.countriesArray) \
+					ORDER BY censusyear.whatyear DESC) FROM censusyear JOIN groupedCountries ON censusyear.whatyear = groupedCountries.whatyear \
+					WHERE cast(censusyear.whatyear AS TEXT) = cast('+request.params.id+' AS TEXT)').then(res => {
+		//console.log("success");
+		if(res.rows[0].json_agg == null) {
+			response.send("[]");
+		}
+		else {
+			response.send(res.rows[0].json_agg);
+		}
+	})
+	
+});
+
+app.get('/api/v1/data/before2020', (request, response) => {
+	//console.log(request.params.id);
+	
+	client.query('WITH groupedCountries AS (SELECT whatyear, json_agg(json_build_object(\'nameOfCountry\', \
+					nameofcountry,\'growthRate\', growthrate) ORDER BY growthrate DESC) AS countriesArray FROM fastestGrowingCountries GROUP BY whatyear) \
+					SELECT json_agg(json_build_object(\'whatYear\', censusyear.whatyear, \'growthRate\', censusyear.growthRate, \
+					\'deathsMln\', censusyear.deathsMln,\'birthsMln\', censusyear.birthsmln,\'mostPopulousCountry\', censusyear.mostpopulouscountry,\
+					\'slowestGrowingCountry\', censusyear.slowestgrowingcountry,\'nextYearPredictionMln\', censusyear.nextyearpredictionmln,\'numberOfCountries\', \
+					censusyear.numberofcountries,\'numberOfPeopleMln\', censusyear.numberofpeoplemln,\'fastestGrowingCountries\', groupedCountries.countriesArray) \
+					ORDER BY censusyear.whatyear DESC) FROM censusyear JOIN groupedCountries ON censusyear.whatyear = groupedCountries.whatyear \
+					WHERE censusyear.whatyear < 2020').then(res => {
+		//console.log("success");
+		if(res.rows[0].json_agg == null) {
+			response.send("[]");
+		}
+		else {
+			response.send(res.rows[0].json_agg);
+		}
+	})
+	
+});
+
+app.get('/api/v1/data/after2020', (request, response) => {
+	//console.log(request.params.id);
+	
+	client.query('WITH groupedCountries AS (SELECT whatyear, json_agg(json_build_object(\'nameOfCountry\', \
+					nameofcountry,\'growthRate\', growthrate) ORDER BY growthrate DESC) AS countriesArray FROM fastestGrowingCountries GROUP BY whatyear) \
+					SELECT json_agg(json_build_object(\'whatYear\', censusyear.whatyear, \'growthRate\', censusyear.growthRate, \
+					\'deathsMln\', censusyear.deathsMln,\'birthsMln\', censusyear.birthsmln,\'mostPopulousCountry\', censusyear.mostpopulouscountry,\
+					\'slowestGrowingCountry\', censusyear.slowestgrowingcountry,\'nextYearPredictionMln\', censusyear.nextyearpredictionmln,\'numberOfCountries\', \
+					censusyear.numberofcountries,\'numberOfPeopleMln\', censusyear.numberofpeoplemln,\'fastestGrowingCountries\', groupedCountries.countriesArray) \
+					ORDER BY censusyear.whatyear DESC) FROM censusyear JOIN groupedCountries ON censusyear.whatyear = groupedCountries.whatyear \
+					WHERE censusyear.whatyear >= 2020').then(res => {
+		//console.log("success");
+		if(res.rows[0].json_agg == null) {
+			response.send("[]");
+		}
+		else {
+			response.send(res.rows[0].json_agg);
+		}
+	})
+	
+});
+
+app.get('/api/v1/data/chinaBiggest', (request, response) => {
+	//console.log(request.params.id);
+	
+	client.query('WITH groupedCountries AS (SELECT whatyear, json_agg(json_build_object(\'nameOfCountry\', \
+					nameofcountry,\'growthRate\', growthrate) ORDER BY growthrate DESC) AS countriesArray FROM fastestGrowingCountries GROUP BY whatyear) \
+					SELECT json_agg(json_build_object(\'whatYear\', censusyear.whatyear, \'growthRate\', censusyear.growthRate, \
+					\'deathsMln\', censusyear.deathsMln,\'birthsMln\', censusyear.birthsmln,\'mostPopulousCountry\', censusyear.mostpopulouscountry,\
+					\'slowestGrowingCountry\', censusyear.slowestgrowingcountry,\'nextYearPredictionMln\', censusyear.nextyearpredictionmln,\'numberOfCountries\', \
+					censusyear.numberofcountries,\'numberOfPeopleMln\', censusyear.numberofpeoplemln,\'fastestGrowingCountries\', groupedCountries.countriesArray) \
+					ORDER BY censusyear.whatyear DESC) FROM censusyear JOIN groupedCountries ON censusyear.whatyear = groupedCountries.whatyear \
+					WHERE cast(censusyear.mostPopulousCountry AS TEXT) = \'China\'').then(res => {
+		//console.log("success");
+		if(res.rows[0].json_agg == null) {
+			response.send("[]");
+		}
+		else {
+			response.send(res.rows[0].json_agg);
+		}
+	})
+	
+});
+
+app.get('/api/v1/data/indiaBiggest', (request, response) => {
+	//console.log(request.params.id);
+	
+	client.query('WITH groupedCountries AS (SELECT whatyear, json_agg(json_build_object(\'nameOfCountry\', \
+					nameofcountry,\'growthRate\', growthrate) ORDER BY growthrate DESC) AS countriesArray FROM fastestGrowingCountries GROUP BY whatyear) \
+					SELECT json_agg(json_build_object(\'whatYear\', censusyear.whatyear, \'growthRate\', censusyear.growthRate, \
+					\'deathsMln\', censusyear.deathsMln,\'birthsMln\', censusyear.birthsmln,\'mostPopulousCountry\', censusyear.mostpopulouscountry,\
+					\'slowestGrowingCountry\', censusyear.slowestgrowingcountry,\'nextYearPredictionMln\', censusyear.nextyearpredictionmln,\'numberOfCountries\', \
+					censusyear.numberofcountries,\'numberOfPeopleMln\', censusyear.numberofpeoplemln,\'fastestGrowingCountries\', groupedCountries.countriesArray) \
+					ORDER BY censusyear.whatyear DESC) FROM censusyear JOIN groupedCountries ON censusyear.whatyear = groupedCountries.whatyear \
+					WHERE cast(censusyear.mostPopulousCountry AS TEXT) = \'India\'').then(res => {
+		//console.log("success");
+		if(res.rows[0].json_agg == null) {
+			response.send("[]");
+		}
+		else {
+			response.send(res.rows[0].json_agg);
+		}
+	})
+	
+});
+
+
+
+
+
+
+
 app.listen(process.env.PORT || 3000, () => console.log("http://localhost:3000"));
