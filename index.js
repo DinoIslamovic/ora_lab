@@ -25,14 +25,10 @@ client.query('SELECT * FROM censusyear').then(res => {
 
 });
 
-fs.readFile('input.txt', (err, data) => {
-	if(err) throw err;
-	
-	//console.log(data.toString());
-});
 
 
-const eventEmitter = new EventEmitter();
+
+//const eventEmitter = new EventEmitter();
 /*
 eventEmitter.on('buttonPress', () => {
 	console.log('pressed');
