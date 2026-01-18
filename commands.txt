@@ -1,0 +1,11 @@
+startup:
+pg_ctl -D "C:/Program Files/PostgreSQL/17/data" start
+pg_ctl -D "C:/Program Files/PostgreSQL/17/data" stop
+
+api:
+
+http://localhost:3000/api/v1/data/
+
+http://localhost:3000/api/v1/data/insert?whatYear=2000&growthRate=1.1&deathsMln=100&birthsMln=101&mostPopulousCountry=China&slowestGrowingCountry=Canada&nextYearPredictionMln=7300&numberOfCountries=190&numberOfPeopleMln=7283&country1name=Croatia&country1growth=1.1&country2name=China&country2growth=0.9&country3name=Singapore&country3growth=0.5
+
+http://localhost:3000/api/v1/data/modify/2000?growthRate=5&mostPopulousCountry=Japan

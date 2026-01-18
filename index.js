@@ -228,10 +228,10 @@ app.get('/api/v1/data/all', (request, response) => {
 		censusyear.numberofcountries,\'numberOfPeopleMln\', censusyear.numberofpeoplemln,\'fastestGrowingCountries\', groupedCountries.countriesArray) \
 		ORDER BY censusyear.whatyear DESC) FROM censusyear JOIN groupedCountries ON censusyear.whatyear = groupedCountries.whatyear').then(res => {
 		if(res.rows[0].json_agg == null) {
-			response.send("[]");
+			response.status(404).send({status: 404, response: "[]"});
 		}
 		else {
-			response.send(res.rows[0].json_agg);
+			response.status(200).send({status: 200, response: res.rows[0].json_agg});
 		}
 	})
 });
@@ -249,10 +249,10 @@ app.get('/api/v1/data/specific/:id', (request, response) => {
 					WHERE cast(censusyear.whatyear AS TEXT) = cast('+request.params.id+' AS TEXT)').then(res => {
 		//console.log("success");
 		if(res.rows[0].json_agg == null) {
-			response.send("[]");
+			response.status(404).send({status: 404, response: "[]"});
 		}
 		else {
-			response.send(res.rows[0].json_agg);
+			response.status(200).send({status: 200, response: res.rows[0].json_agg});
 		}
 	})
 	
@@ -271,10 +271,10 @@ app.get('/api/v1/data/before2020', (request, response) => {
 					WHERE censusyear.whatyear < 2020').then(res => {
 		//console.log("success");
 		if(res.rows[0].json_agg == null) {
-			response.send("[]");
+			response.status(404).send({status: 404, response: "[]"});
 		}
 		else {
-			response.send(res.rows[0].json_agg);
+			response.status(200).send({status: 200, response: res.rows[0].json_agg});
 		}
 	})
 	
@@ -293,10 +293,10 @@ app.get('/api/v1/data/after2020', (request, response) => {
 					WHERE censusyear.whatyear >= 2020').then(res => {
 		//console.log("success");
 		if(res.rows[0].json_agg == null) {
-			response.send("[]");
+			response.status(404).send({status: 404, response: "[]"});
 		}
 		else {
-			response.send(res.rows[0].json_agg);
+			response.status(200).send({status: 200, response: res.rows[0].json_agg});
 		}
 	})
 	
@@ -315,10 +315,10 @@ app.get('/api/v1/data/chinaBiggest', (request, response) => {
 					WHERE cast(censusyear.mostPopulousCountry AS TEXT) = \'China\'').then(res => {
 		//console.log("success");
 		if(res.rows[0].json_agg == null) {
-			response.send("[]");
+			response.status(404).send({status: 404, response: "[]"});
 		}
 		else {
-			response.send(res.rows[0].json_agg);
+			response.status(200).send({status: 200, response: res.rows[0].json_agg});
 		}
 	})
 	
@@ -337,15 +337,128 @@ app.get('/api/v1/data/indiaBiggest', (request, response) => {
 					WHERE cast(censusyear.mostPopulousCountry AS TEXT) = \'India\'').then(res => {
 		//console.log("success");
 		if(res.rows[0].json_agg == null) {
-			response.send("[]");
+			response.status(404).send({status: 404, response: "[]"});
 		}
 		else {
-			response.send(res.rows[0].json_agg);
+			response.status(200).send({status: 200, response: res.rows[0].json_agg});
 		}
 	})
 	
 });
 
+app.post('/api/v1/data/insert', (request, response) => {
+	//console.log(request.query);
+	if (!request.query.whatYear || !request.query.growthRate || !request.query.deathsMln || !request.query.birthsMln || !request.query.mostPopulousCountry || !request.query.slowestGrowingCountry || !request.query.nextYearPredictionMln || !request.query.numberOfCountries || !request.query.numberOfPeopleMln) {
+		return response.status(400).send({response: "Error with parameters"});
+	}
+	const whatYear = request.query.whatYear, growthRate = request.query.growthRate, deathsMln = request.query.deathsMln, birthsMln = request.query.birthsMln, mostPopulousCountry = request.query.mostPopulousCountry;
+	const slowestGrowingCountry = request.query.slowestGrowingCountry, nextYearPredictionMln = request.query.nextYearPredictionMln, numberOfCountries = request.query.numberOfCountries, numberOfPeopleMln = request.query.numberOfPeopleMln;
+	valuesArray = [whatYear, growthRate, deathsMln, birthsMln, mostPopulousCountry, slowestGrowingCountry, nextYearPredictionMln, numberOfCountries, numberOfPeopleMln];
+	if(!request.query.country1name || !request.query.country1growth ||!request.query.country2name || !request.query.country2growth ||!request.query.country3name || !request.query.country3growth) {
+		return response.status(400).send({response: "Error with parameters"});
+	}
+	const country1name = request.query.country1name, country1growth = request.query.country1growth;
+	const country2name = request.query.country2name, country2growth = request.query.country2growth;
+	const country3name = request.query.country3name, country3growth = request.query.country3growth;
+	valuesArray2 = [whatYear, country1name, country1growth, country2name, country2growth, country3name, country3growth]
+	//console.log(valuesArray2);
+	try {
+		client.query({text:'INSERT INTO censusyear (whatYear, growthRate, deathsMln, birthsMln, mostPopulousCountry, slowestGrowingCountry, nextYearPredictionMln, numberOfCountries, numberOfPeopleMln) \
+					VALUES(cast($1 AS integer), cast($2 as float), cast($3 as integer), cast($4 as integer), cast($5 as text), cast($6 as text), cast($7 as integer), cast($8 as integer), cast($9 as integer))', values: valuesArray});
+		//console.log("0");
+		client.query({
+				text: 'INSERT INTO fastestgrowingcountries (nameofcountry, growthrate, whatyear) VALUES \
+						(cast($1 as text), cast($2 as float), cast($3 as integer))',
+				values: [country1name, country1growth, whatYear]
+			});
+		//console.log("1");
+		client.query({
+				text: 'INSERT INTO fastestgrowingcountries (nameofcountry, growthrate, whatyear) VALUES \
+						(cast($1 as text), cast($2 as float), cast($3 as integer))',
+				values: [country2name, country2growth, whatYear]
+			});
+		//console.log("2");
+		client.query({
+				text: 'INSERT INTO fastestgrowingcountries (nameofcountry, growthrate, whatyear) VALUES \
+						(cast($1 as text), cast($2 as float), cast($3 as integer))',
+				values: [country3name, country3growth, whatYear]
+			}).then(res => {
+				response.status(201).send({response: {whatYear: whatYear, growthRate: growthRate, other: "..."}});
+		});
+	}
+	catch(err) {
+		response.status(500).send({response: "Database error"});
+	}
+	
+});
+
+app.put('/api/v1/data/modify/:whatYear', (request, response) => {
+	const thisYear = request.params.whatYear;
+	if(!request.params.whatYear) {
+		return response.status(400).send({status: 400, response: "Missing whatYear key"})
+	}
+	client.query('SELECT * FROM censusyear WHERE whatyear = cast('+request.params.whatYear+' AS integer)').then(res => {
+		//console.log(res.rows.length);
+		if(res.rows.length == 0) {
+			response.status(404).send({status: 404, response: "There is no data under whatyear="+thisYear});
+		}
+		else {
+			var update_string = "whatYear = "+request.params.whatYear;
+			if(request.query.growthRate) {
+				update_string += ", growthRate = "+request.query.growthRate;
+			}
+			if(request.query.deathsMln) {
+				update_string += ", deathsMln = "+request.query.deathsMln;
+			}
+			if(request.query.birthsMln) {
+				update_string += ", birthsMln = "+request.query.birthsMln;
+			}
+			if(request.query.mostPopulousCountry) {
+				update_string += ", mostPopulousCountry = \'"+request.query.mostPopulousCountry+"\'";
+			}
+			if(request.query.slowestGrowingCountry) {
+				update_string += ", slowestGrowingCountry = \'"+request.query.slowestGrowingCountry+"\'";
+			}
+			if(request.query.nextYearPredictionMln) {
+				update_string += ", nextYearPredictionMln = "+request.query.nextYearPredictionMln;
+			}
+			if(request.query.numberOfCountries) {
+				update_string += ", numberOfCountries = "+request.query.numberOfCountries;
+			}
+			if(request.query.numberOfPeopleMln) {
+				update_string += ", numberOfPeopleMln = "+request.query.numberOfPeopleMln;
+			}
+			console.log(update_string);
+			try {
+				client.query('UPDATE censusyear SET '+update_string+' WHERE whatYear = cast('+request.params.whatYear+' AS integer)').then(res => {
+					response.status(200).send({status: 200, response: "Data at whatYear="+request.params.whatYear+" has been modified"});
+				});
+			}
+			catch(err) {
+				response.status(304).send({status: 304, response: "Data has not been modified due to an error"});
+			}
+		}
+	})
+	
+	
+
+});
+
+app.delete('/api/v1/data/delete/:whatYear', (request, response) => {
+	if(!request.params.whatYear) {
+		return response.status(400).send({status: 400, response: "Missing whatYear key"})
+	}
+	const whatYear = request.params.whatYear;
+	try {
+		client.query({text: 'DELETE FROM fastestgrowingcountries WHERE whatyear = cast($1 as integer)', values: [whatYear]});
+		client.query({text: 'DELETE FROM censusyear WHERE whatyear = cast($1 as integer)', values: [whatYear]}).then(res => {
+			response.status(410).send({status: 410, response: "Data at year "+whatYear+" has been deleted"});
+		});
+	}
+	catch(err) {
+		response.status(500).send({status: 500, response: "Database error"});
+	}
+});
 
 
 
