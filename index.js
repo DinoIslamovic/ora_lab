@@ -25,6 +25,27 @@ client.query('SELECT * FROM censusyear').then(res => {
 
 });
 
+const { auth } = require('express-openid-connect');
+
+const config = {
+  authRequired: false,
+  auth0Logout: true,
+  secret: 'a long, randomly-generated string stored in env',
+  baseURL: 'http://localhost:3000',
+  clientID: '9cyxObWN6WbbU27fqTcMZ4UrHQZ9Mu89',
+  issuerBaseURL: 'https://dev-z5wsk3mj6tieynxp.eu.auth0.com'
+};
+
+// auth router attaches /login, /logout, and /callback routes to the baseURL
+app.use(auth(config));
+
+const { requiresAuth } = require('express-openid-connect');
+//console.log(requiresAuth);
+
+app.get('/profile', requiresAuth(), (req, res) => {
+	//console.log(requiresAuth());
+	res.send(JSON.stringify(req.oidc.user));
+});
  
 
 
@@ -76,6 +97,15 @@ app.get('/frontend.js', (request, response) => {
 
 app.get('/fixedYearlyPopulation.json', (request, response) => {
 	fs.readFile('./fixedYearlyPopulation.json', 'utf8', (err, html) => {
+		if(err) {
+			response.status(500).send("server error");
+		}
+
+		response.send(html);
+	})
+})
+app.get('/openapi.json', (request, response) => {
+	fs.readFile('./openapi.json', 'utf8', (err, html) => {
 		if(err) {
 			response.status(500).send("server error");
 		}
@@ -228,7 +258,7 @@ app.get('/api/v1/data/all', (request, response) => {
 		censusyear.numberofcountries,\'numberOfPeopleMln\', censusyear.numberofpeoplemln,\'fastestGrowingCountries\', groupedCountries.countriesArray) \
 		ORDER BY censusyear.whatyear DESC) FROM censusyear JOIN groupedCountries ON censusyear.whatyear = groupedCountries.whatyear').then(res => {
 		if(res.rows[0].json_agg == null) {
-			response.status(404).send({status: 404, response: "[]"});
+			response.status(404).send({status: 404, response: null});
 		}
 		else {
 			response.status(200).send({status: 200, response: res.rows[0].json_agg});
@@ -249,7 +279,7 @@ app.get('/api/v1/data/specific/:id', (request, response) => {
 					WHERE cast(censusyear.whatyear AS TEXT) = cast('+request.params.id+' AS TEXT)').then(res => {
 		//console.log("success");
 		if(res.rows[0].json_agg == null) {
-			response.status(404).send({status: 404, response: "[]"});
+			response.status(404).send({status: 404, response: null});
 		}
 		else {
 			response.status(200).send({status: 200, response: res.rows[0].json_agg});
@@ -459,6 +489,10 @@ app.delete('/api/v1/data/delete/:whatYear', (request, response) => {
 		response.status(500).send({status: 500, response: "Database error"});
 	}
 });
+
+
+
+
 
 
 

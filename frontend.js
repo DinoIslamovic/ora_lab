@@ -16,7 +16,8 @@
 var table = document.getElementById("temp_table");
 var btn = document.getElementById("filterButton");
 var whatToSearch = document.getElementById("formId");
-
+var profileBtn = document.getElementById("profile_link");
+var refreshBtn = document.getElementById("refresh_link")
 
 btn.addEventListener("click", pressFunc)
 /*
