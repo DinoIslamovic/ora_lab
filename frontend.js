@@ -16,19 +16,47 @@
 var table = document.getElementById("temp_table");
 var btn = document.getElementById("filterButton");
 var whatToSearch = document.getElementById("formId");
+var logInBtn = document.getElementById("login_link");
+var logOutBtn = document.getElementById("logout_link");
 var profileBtn = document.getElementById("profile_link");
-var refreshBtn = document.getElementById("refresh_link")
+var refreshBtn = document.getElementById("refresh_button");
 
 btn.addEventListener("click", pressFunc)
-/*
-var httpRequest = new XMLHttpRequest();
-httpRequest.open('GET', 'fixedYearlyPopulation.json');
-httpRequest.onload = function() {
-	var jsonData = filterData(JSON.parse(httpRequest.responseText));
-	writeData(jsonData);
-};
-httpRequest.send();
-*/
+refreshBtn.addEventListener("click", refreshFunc)
+const hide_show = async () => {
+	var checkLogIn = new XMLHttpRequest();
+	checkLogIn.open('GET', 'checkLogIn', true);
+	checkLogIn.onload = function() {
+		if(checkLogIn.responseText == "da") {
+			logInBtn.hidden = true;
+			logOutBtn.hidden = false;
+			profileBtn.hidden = false;
+			refreshBtn.hidden = false;
+		}
+		else {
+			logInBtn.hidden = false;
+			logOutBtn.hidden = true;
+			profileBtn.hidden = true;
+			refreshBtn.hidden = true;
+		}
+	}
+	checkLogIn.send()
+}
+	
+setInterval(hide_show, 25);
+
+function refreshFunc() {
+	var httpRequest = new XMLHttpRequest();
+	httpRequest.open('GET', '/api/v1/data/all');
+	httpRequest.setRequestHeader('Content-type', 'application/json');
+	httpRequest.onload = function() {
+		//console.log("yo0");
+		var jsonData = filterData(JSON.parse(httpRequest.responseText));
+		//console.log(jsonData.response);
+		writeData(jsonData.response);
+	};
+	httpRequest.send(); 
+}
 
 function pressFunc() {
 	var formvalue = document.getElementById("formId").value;

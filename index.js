@@ -47,7 +47,15 @@ app.get('/profile', requiresAuth(), (req, res) => {
 	res.send(JSON.stringify(req.oidc.user));
 });
  
+app.get('/checkLogIn', (req, res) => {
+	//console.log(requiresAuth());
+	//console.log(req.oidc.isAuthenticated() ? "da" : "ne");
+	res.send(req.oidc.isAuthenticated() ? "da" : "ne");
+});
 
+app.get('/refresh', (req, res) => {
+	
+});
 
 //const eventEmitter = new EventEmitter();
 /*
@@ -87,6 +95,16 @@ app.get('/style.css', (request, response) => {
 })
 app.get('/frontend.js', (request, response) => {
 	fs.readFile('./frontend.js', 'utf8', (err, html) => {
+		if(err) {
+			response.status(500).send("server error");
+		}
+
+		response.send(html);
+	})
+})
+
+app.get('/index_short.js', (request, response) => {
+	fs.readFile('./index_short.js', 'utf8', (err, html) => {
 		if(err) {
 			response.status(500).send("server error");
 		}

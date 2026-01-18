@@ -2,6 +2,7 @@
 	<head>
 		<title>Moji podaci</title>
 		<link rel="stylesheet" href='style.css'>
+		
 		<meta charset="UTF-8">
 		<meta name="author", content="Dino Islamović">
 		<meta name="description", content="Podaci vezani uz broj stanovnika na Zemlji po godinama.">
@@ -10,9 +11,11 @@
 
 	<body>
 		<h1>Moji podaci</h1>
-		<p><a href="/login">Prijavi se</a></p> | <p><a href="/logout">Odjavi se</a></p>
+		<p id="login_link"><a href="/login">Prijavi se</a></p>
+		<p id="logout_link"><a href="/logout">Odjavi se</a></p>
 		<p id="profile_link"><a href = "/profile">Profil</a></p>
 		<p>Preuzimanje podataka: <a href='fixedYearlyPopulation.csv'>csv</a>, <a href='fixedYearlyPopulation.json'>json</a></p>
 		<p>Pregled podataka: <a href='datatable.html'>podaci</a></p>
+		<script type="text/javascript" src="index_short.js"></script>
 	</body>
 </html>
