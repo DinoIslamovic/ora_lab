@@ -1,0 +1,136 @@
+{
+    "openapi": "3.10.0",
+    "info": {
+        "info": "API za prihvaćanje podataka iz baze podataka",
+        "version": "1.0"
+    },
+    "paths": {
+        "/api/v1/data/all": {
+            "get": {
+                "summary": "Get entire collection",
+                "description": "Returns entire collection as a JSON string",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Fetch successful"
+                    },
+                    "404": {
+                        "description": "Empty database"
+                    }
+                }
+            }
+        },
+        "/api/v1/data/specific/{year}": {
+            "get": {
+                "summary": "Get single row by year",
+                "description": "Returns single a single row",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "year",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "desciption": "Fetch successful"
+                    },
+                    "404": {
+                        "description": "Resource not found"
+                    }
+                }
+            }
+        },
+        "/api/v1/data/before2020": {
+            "get": {
+                "summary": "Get data for years before 2020",
+                "description": "Returns all rows where whatYear < 2020",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Fetch successful"
+                    },
+                    "404": {
+                        "description": "No data before the year 2020"
+                    }
+                }
+            }
+        },
+        "/api/v1/data/after2020": {
+            "get": {
+                "summary": "Get data for years after and including 2020",
+                "description": "Returns all rows where whatYear >= 2020",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Fetch successful"
+                    },
+                    "404": {
+                        "description": "No data after the year 2020"
+                    }
+                }
+            }
+        },
+        "/api/v1/data/chinaBiggest": {
+            "get": {
+                "summary": "Get data for years where China is the biggest country",
+                "description": "Returns all rows where mostPopulousCountry = 'China'",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Fetch successful"
+                    },
+                    "404": {
+                        "description": "China is not the biggest country in any year"
+                    }
+                }
+            }
+        },
+        "/api/v1/data/indiaBiggest": {
+            "get": {
+                "summary": "Get data for years where India is the biggest country",
+                "description": "Returns all rows where mostPopulousCountry = 'India'",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Fetch successful"
+                    },
+                    "404": {
+                        "description": "India is not the biggest country in any year"
+                    }
+                }
+            }
+        }
+    }
+}
